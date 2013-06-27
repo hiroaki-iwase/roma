@@ -176,7 +176,7 @@ module Roma
           if @stats.latency_check_cmd.length >= 1
             if @stats.latency_check_cmd.include?(@lastcmd[0])
               args = [ps, @lastcmd[0], @stats.latency_check_denominator]
-              Roma::AsyncProcess::queue.push(Roma::AsyncMessage.new('calc_latency_average', args))
+              @stats.latency_proc.call('calc_latency_average', args) if @stats.latency_proc
             end
           end
 

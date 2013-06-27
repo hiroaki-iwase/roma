@@ -631,16 +631,12 @@ module Roma
       @log.info("#{__method__}:stop")
     end
 
-
-
-
     def asyncev_calc_latency_average(args)
       latency,cmd,denominator = args
       @log.debug(__method__)
 
       @latency_chk_cnt = {} if !defined?(@latency_chk_cnt)
       @sum = {} if !defined?(@sum)
-
       @latency_chk_cnt.store(cmd, 0) if !@latency_chk_cnt.key?(cmd)
       @sum.store(cmd, 0) if !@sum.key?(cmd)
 
@@ -661,8 +657,6 @@ module Roma
       t[:name] = __method__
       true
     end
-
-
 
   end # module AsyncProcess
 

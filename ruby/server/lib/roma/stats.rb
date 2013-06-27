@@ -59,6 +59,7 @@ module Roma
     # for latency average check
     attr_accessor :latency_check_cmd
     attr_accessor :latency_check_denominator
+    attr :latency_proc
 
     def initialize
       @config_path = nil
@@ -87,6 +88,7 @@ module Roma
       @wb_command_map = {}
       @latency_check_cmd = []
       @latency_check_denominator = 0
+      @latency_proc = nil
     end
 
     def ap_str
@@ -140,6 +142,10 @@ module Roma
 
     def do_clean_up?
       @last_clean_up.to_i + @clean_up_interval < Time.now.to_i
+    end
+
+    def set_latency_proc(&block)
+      @latency_proc=block
     end
 
     private

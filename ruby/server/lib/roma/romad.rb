@@ -236,6 +236,10 @@ module Roma
       else
         Command::Receiver::mk_starting_evlist
       end
+
+      @stats.set_latency_proc{|action,args|
+          Roma::AsyncProcess::queue.push(Roma::AsyncMessage.new(action, args))
+      }
     end
 
     def initialize_logger
