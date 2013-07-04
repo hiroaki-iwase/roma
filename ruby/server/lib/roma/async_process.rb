@@ -58,6 +58,10 @@ module Roma
       @log.error("#{e}\n#{$@}")
     end
 
+    def self.calc_qps
+        qps = 1 /((@@get_latency + @@set_latency)/2)
+    end
+
     private
 
     def stop_async_process
@@ -687,7 +691,12 @@ module Roma
       begin
         @sum[cmd] += latency
         if (@latency_chk_cnt[cmd] += 1) >= @stats.latency_check_denominator
-          @log.info("latency average about [#{cmd}] is #{@sum[cmd] / @latency_chk_cnt[cmd]} seconds")
+          average = @sum[cmd] / @latency_chk_cnt[cmd]
+          @log.info("latency average about [#{cmd}] is #{average} seconds")
+
+          @@get_latency = average if cmd == "get"
+          @@set_latency = average if cmd == "set"
+
           @latency_chk_cnt[cmd] = 0
           @sum[cmd] = 0
         end

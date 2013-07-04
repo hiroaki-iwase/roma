@@ -67,6 +67,15 @@ module Roma
         send_data("#{@stats.name}\r\n")
       end
 
+      def ev_qps(s)
+        begin
+          qps = Roma::AsyncProcess::calc_qps
+          send_data("qps : #{qps}\r\n")
+        rescue
+          send_data("Not exist latency data\r\n")
+        end
+      end
+
       # stats [regexp]
       def ev_stats(s); ev_stat(s); end
 
