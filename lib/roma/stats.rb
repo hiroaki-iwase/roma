@@ -57,6 +57,9 @@ module Roma
     # for write behind
     attr_accessor :wb_command_map
 
+    # for replication cluster
+    attr_accessor :run_replication
+
     # for latency average check
     attr_accessor :latency_log
     attr_accessor :latency_check_cmd
@@ -111,6 +114,7 @@ module Roma
       @size_of_zredundant = 0
       @hilatency_warn_time = 5.0
       @wb_command_map = {}
+      @run_replication = false
       @latency_log = false
       @latency_check_cmd =["get", "set", "delete"]
       @latency_check_time_count = false
@@ -163,6 +167,7 @@ module Roma
       ret['stats.redundant_count'] = @redundant_count
       ret['stats.hilatency_warn_time'] = @hilatency_warn_time
       ret['stats.wb_command_map'] = @wb_command_map.inspect
+      ret['stats.run_replication'] = @run_replication
       ret['stats.latency_log']  = @latency_log
       ret['stats.latency_check_cmd']  = @latency_check_cmd
       ret['stats.latency_check_time_count']  = @latency_check_time_count

@@ -5,6 +5,7 @@ require 'roma/stats'
 require 'roma/command_plugin'
 require 'roma/async_process'
 require 'roma/write_behind'
+require 'roma/cluster_replication'
 require 'roma/logging/rlogger'
 require 'roma/command/receiver'
 require 'roma/messaging/con_pool'
@@ -17,11 +18,13 @@ module Roma
   class Romad
     include AsyncProcess
     include WriteBehindProcess
+    include ClusterReplicationProcess
 
     attr :storages
     attr :rttable
     attr :stats
     attr :wb_writer
+    attr :cr_writer
 
     attr_accessor :eventloop
     attr_accessor :startup
@@ -38,6 +41,7 @@ module Roma
       initialize_handler
       initialize_plugin
       initialize_wb_writer
+      initialize_cr_writer
     end
 
     def start
@@ -72,6 +76,7 @@ module Roma
 
       start_async_process
       start_wb_process
+      start_cr_process
       timer
 
       if @stats.join_ap
@@ -153,6 +158,7 @@ module Roma
       end
       stop_async_process
       stop_wb_process
+      stop_cr_process
       stop
     end
 
@@ -229,6 +235,13 @@ module Roma
                                                      Roma::Config::WRITEBEHIND_PATH,
                                                      Roma::Config::WRITEBEHIND_SHIFT_SIZE,
                                                      @log)
+    end
+
+    def initialize_cr_writer
+      if Config.const_defined?(:REPLICATION)
+        @stats.run_replication = Roma::Config::REPLICATION
+        @cr_writer = Roma::ClusterReplication::StreamWriter.new(@log)
+      end
     end
 
     def initialize_plugin

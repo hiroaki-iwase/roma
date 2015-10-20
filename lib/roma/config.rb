@@ -88,6 +88,9 @@ module Roma
     WRITEBEHIND_PATH = './wb'
     WRITEBEHIND_SHIFT_SIZE = 1024 * 1024 * 10
 
+    # replication-cluster setting
+    REPLICATION = false
+
     # redundant setting
     # REDUNDANT_ZREDUNDANT_SIZE is a option for a redundancy of compressed data.
     # when the data size is more then REDUNDANT_ZREDUNDANT_SIZE, data compression is done.
