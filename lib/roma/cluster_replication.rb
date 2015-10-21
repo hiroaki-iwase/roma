@@ -1,5 +1,6 @@
 require 'thread'
 require 'roma/stats'
+require 'roma/event/con_pool'
 require 'socket'
 
 module Roma
@@ -17,20 +18,17 @@ module Roma
 
       def transmit(cmd)
         @do_transmit = true
-        con = get_replica_connection
+        nid = @replica_nodelist.sample
+
+        con = Roma::Messaging::ConPool.instance.get_connection(nid)
+        raise unless con
+
         con.write(cmd)
       rescue => e
         @log.error("#{e}\n#{$@}")
       ensure
+        Roma::Messaging::ConPool.instance.return_connection(nid, con)
         @do_transmit = false
-        con.close
-      end
-
-      def get_replica_connection
-        # [toDO] コネクションプール使う
-        nid = @replica_nodelist.sample
-        addr, port = nid.split(/[:_]/)
-        TCPSocket.new(addr, port)
       end
 
       def close_all
