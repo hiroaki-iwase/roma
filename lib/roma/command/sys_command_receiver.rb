@@ -4,7 +4,7 @@ module Roma
   module Command
 
     module SystemCommandReceiver
-
+      include Comparable
       # balse [reason]
       def ev_balse(s)
         send_data("Are you sure?(yes/no)\r\n")
@@ -1068,6 +1068,49 @@ module Roma
 
         $roma.wb_writer.shift_size = s[1].to_i
         send_data("STORED\r\n")
+      end
+
+      # switch_cluster_replication <true|false> <nid>
+      def ev_switch_cluster_replication(s)
+        unless s.length.between?(2, 3)
+          return send_data("CLIENT_ERROR number of arguments\r\n")
+        end
+        res = broadcast_cmd("rswitch_cluster_replication #{s[1]} #{s[2]}\r\n")
+
+        if s[1] == 'true' && s.length == 3
+          @stats.cluster_replication = true
+          @stats.replica_nodelist.push(s[2])
+          @log.info("cluster replication enabled")
+          res[@stats.ap_str] = "ENABLED"
+        elsif s[1] == 'false' && s.length == 2
+          @stats.cluster_replication = false
+          @stats.replica_nodelist = []
+          @log.info("cluster replication disabled")
+          res[@stats.ap_str] = "DISABLED"
+        else
+          res[@stats.ap_str] = "NOTSWITCHED"
+        end
+        send_data("#{res}\r\n")
+      end
+
+      # rswitch_cluster_replication <true|false> <nid>
+      def ev_rswitch_cluster_replication(s)
+        unless s.length.between?(2, 3)
+          return send_data("CLIENT_ERROR number of arguments\r\n")
+        end
+        if s[1] == 'true' && s.length == 3
+          @stats.cluster_replication = true
+          @stats.replica_nodelist.push(s[2])
+          @log.info("cluster replication enabled")
+          return send_data("ENABLED\r\n")
+        elsif s[1] == 'false' && s.length == 2
+          @stats.cluster_replication = false
+          @stats.replica_nodelist = []
+          @log.info("cluster replication disabled")
+          return send_data("DISABLED\r\n")
+        else
+          send_data("NOTSWITCHED\r\n")
+        end
       end
 
       # set_storage_status [number of file][safecopy|normal]{hash_name}

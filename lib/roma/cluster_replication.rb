@@ -1,4 +1,5 @@
 require 'thread'
+require 'roma/stats'
 require 'socket'
 
 module Roma
@@ -10,7 +11,8 @@ module Roma
       def initialize(log)
         @log = log
         @do_transmit = false
-        @replica_nodelist = ['192.168.33.13_10001', '192.168.33.13_10002', '192.168.33.13_10003']
+        @stats = Roma::Stats.instance
+        @replica_nodelist = @stats.replica_nodelist
       end
 
       def transmit(cmd)

@@ -157,6 +157,10 @@ module Roma
           Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[:delete], key, res[4])
         end
 
+        if @stats.cluster_replication
+          Roma::ClusterReplicationProcess::push("delete #{key}\r\n")
+        end
+
         nodes[1..-1].each{ |nid|
           res2 = send_cmd(nid,"rdelete #{key}\e#{hname} #{res[2]}\r\n")
           unless res2
@@ -197,6 +201,10 @@ module Roma
 
         if @stats.wb_command_map.key?(:delete)
           Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[:delete], key, res[4])
+        end
+
+        if @stats.cluster_replication
+          Roma::ClusterReplicationProcess::push("delete #{key}\r\n")
         end
 
         nodes.delete(@nid)
@@ -338,6 +346,9 @@ module Roma
 @log.debug(":set_export")
             Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[:set_expt], key, expt.to_s)
           end
+          if @stats.cluster_replication
+            Roma::ClusterReplicationProcess::push("set_expt #{key} #{expt}\r\n")
+          end
           redundant(nodes[1..-1], hname, key, d, ret[2], ret[3], ret[4])
           send_data("STORED\r\n")
         else
@@ -374,6 +385,9 @@ module Roma
         if ret
           if @stats.wb_command_map.key?(:set_expt)
             Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[:set_expt], key, expt.to_s)
+          end
+          if @stats.cluster_replication
+            Roma::ClusterReplicationProcess::push("set_expt #{key} #{expt}\r\n")
           end
           redundant(nodes[1..-1], hname, key, d, ret[2], ret[3], ret[4])
           send_data("STORED\r\n")
@@ -470,7 +484,7 @@ module Roma
           if @stats.wb_command_map.key?(fnc)
             Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[fnc], k, ret[4])
           end
-          if @stats.run_replication
+          if @stats.cluster_replication
             Roma::ClusterReplicationProcess::push("#{fnc} #{k} 0 #{expt} #{v.length} \r\n#{v}\r\n")
           end
           redundant(nodes, hname, k, d, ret[2], expt, ret[4])
@@ -507,6 +521,9 @@ module Roma
         else
           if @stats.wb_command_map.key?(:cas)
             Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[:cas], k, ret[4])
+          end
+          if @stats.cluster_replication
+            Roma::ClusterReplicationProcess::push("cas #{k} 0 #{expt} #{v.length} #{clk} \r\n#{v}\r\n")
           end
           redundant(nodes, hname, k, d, ret[2], expt, ret[4])
           send_data("STORED\r\n")          
@@ -605,6 +622,9 @@ module Roma
         if res
           if @stats.wb_command_map.key?(fnc)
             Roma::WriteBehindProcess::push(hname, @stats.wb_command_map[fnc], k, res[4])
+          end
+          if @stats.cluster_replication
+            Roma::ClusterReplicationProcess::push("#{fnc} #{k} #{v}\r\n")
           end
           redundant(nodes, hname, k, d, res[2], res[3], res[4])
           send_data("#{res[4]}\r\n")

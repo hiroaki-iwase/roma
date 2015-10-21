@@ -238,8 +238,9 @@ module Roma
     end
 
     def initialize_cr_writer
-      if Config.const_defined?(:REPLICATION)
-        @stats.run_replication = Roma::Config::REPLICATION
+      if Config.const_defined?(:CLUSTER_REPLICATION)
+        @stats.cluster_replication = Roma::Config::CLUSTER_REPLICATION
+        @stats.replica_nodelist = Roma::Config::REPLICA_NODELIST
         @cr_writer = Roma::ClusterReplication::StreamWriter.new(@log)
       end
     end

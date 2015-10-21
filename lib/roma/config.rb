@@ -89,7 +89,8 @@ module Roma
     WRITEBEHIND_SHIFT_SIZE = 1024 * 1024 * 10
 
     # replication-cluster setting
-    REPLICATION = false
+    CLUSTER_REPLICATION = false
+    REPLICA_NODELIST = []
 
     # redundant setting
     # REDUNDANT_ZREDUNDANT_SIZE is a option for a redundancy of compressed data.
