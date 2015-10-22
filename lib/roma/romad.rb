@@ -617,6 +617,9 @@ module Roma
       end
 
       @stats.clear_counters
+
+      update_replica_rttable(@stats.replica_nodelist) if @stats.cluster_replication
+
     rescue Exception =>e
       @log.error("#{e}\n#{$@}")
     end

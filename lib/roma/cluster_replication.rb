@@ -123,6 +123,72 @@ module Roma
     end
     private :cr_process_loop
 
+    # 10 秒に一回呼び出す
+    def update_replica_rttable(nodes)
+　　　# nodesが0は通常ありえないのでraiseして終了
+      raise RuntimeError.new("nodes must not be nil.") unless nodes
+
+      nodes.each { |node|
+        rt = make_replica_rttable(node)
+
+        if rt != nil
+          @@rttable = rt
+          return
+        end
+      }
+      raise RuntimeError.new("Replica Cluster was down")
+    end
+
+    def make_replica_rttable(node)
+      mklhash = check_replica_mklhash(node)
+      return nil unless mklhash
+
+      # routing list was NOT changed
+      if @stats.replica_nodelist && @stats.replica_mklhash == mklhash
+        return @@rttable
+      end
+
+      # routing list was changed
+      #rd = @sender.send_routedump_command(node)
+      #if rd
+        nodelist = check_replica_nodelist(node)
+        ret.mklhash = mklhash
+        return ret
+      #end
+      nil
+    rescue =>e
+      $log.error("#{e} #{$@}")
+      nil
+    end
+
+    def check_replica_mklhash(node_id)
+      timeout(1){
+        conn = Roma::Messaging::ConPool.instance.get_connection(node_id)
+        conn.write "mklhash 0\r\n"
+        ret = conn.gets
+        ConPool.instance.return_connection(node_id, conn)
+        return ret.chomp if ret
+      }
+    rescue =>e
+      STDERR.puts "#{node_id} #{e.inspect}"
+      return nil
+    end
+
+    def check_replica_nodelist(node_id)
+      timeout(1){
+        conn = Roma::Messaging::ConPool.instance.get_connection(node_id)
+        conn.write "nodelist\r\n"
+        ret = conn.gets
+        ConPool.instance.return_connection(node_id, conn)
+        return ret.chomp.split("\s") if ret
+      }
+    rescue =>e
+      STDERR.puts "#{node_id} #{e.inspect}"
+      return nil
+    end
+
+
+
   end # module ClusterReplicationProcess
 
 end # module Roma
