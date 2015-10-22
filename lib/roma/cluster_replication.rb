@@ -32,7 +32,9 @@ module Roma
       end
 
       def close_all
-        @fdh.each_value{|fd| fd.close }
+        @replica_nodelist.each{|nid|
+          delete_connection(nid)
+        }
       end
 
     end # class StreamWriter
