@@ -41,7 +41,7 @@ before_install:
 
   - LD_LIBRARY_PATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
 
-after_install:
+before_install:
   - bundle install
 
 script: ruby test/run-test.rb
