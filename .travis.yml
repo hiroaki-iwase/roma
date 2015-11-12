@@ -2,10 +2,12 @@ language: ruby
 rvm: 
   - 2.1.2
 env:
-  #- RUBYLIB=/usr/local/src/roma-ruby-client/lib/
-  - RUBYLIB=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
-  - RUBYPATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
-  - PATH=$PATH:/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  - RUBYLIB=/usr/local/src/roma-ruby-client/lib/
+  - RUBYPATH=/usr/local/src/roma-ruby-client/lib/
+  - PATH=$PATH:/usr/local/src/roma-ruby-client/lib/
+  #- RUBYLIB=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  #- RUBYPATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  #- PATH=$PATH:/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
 sudo: true 
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
@@ -35,7 +37,6 @@ before_install:
   # Client Installation 
   - gem install roma-client 
   - ls -l /usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib 
-  #- LD_LIBRARY_PATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib 
   - cd /usr/local/src
   - git clone https://github.com/roma/roma-ruby-client.git roma-ruby-client
 
