@@ -1,0 +1,46 @@
+language: ruby 
+rvm: 
+  - 2.1.2
+env:
+  - RUBYLIB=/usr/local/src/roma-ruby-client/lib/
+  - RUBYPATH=/usr/local/src/roma-ruby-client/lib/
+  - PATH=$PATH:/usr/local/src/roma-ruby-client/lib/
+  #- RUBYLIB=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  #- RUBYPATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  #- PATH=$PATH:/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+sudo: true 
+before_install:
+  - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
+  - sudo apt-get install git -y 
+
+  ### Groonga installation 
+  - curl --silent --location https://github.com/groonga/groonga/raw/master/data/travis/setup.sh | sh 
+  - sudo apt-get install libgroonga-dev -y 
+
+  # TokyoCabinet Installation 
+  - sudo apt-get install libbz2-dev -y 
+  - wget http://fallabs.com/tokyocabinet/tokyocabinet-1.4.48.tar.gz 
+  - tar xvfpz tokyocabinet-1.4.48.tar.gz 
+  - cd tokyocabinet-1.4.48 
+  - ./configure 
+  - make 
+  - sudo make install 
+
+  # TC Ruby client Installation 
+  - cd ../ 
+  - wget https://github.com/roma/tokyocabinet-ruby/archive/v1.31.a.tar.gz 
+  - tar xvfpz v1.31.a.tar.gz 
+  - cd tokyocabinet-ruby-1.31.a 
+  - gem build tokyocabinet.gemspec 
+  - gem install --local tokyocabinet-1.31.a.gem -- --with-tokyocabinet-dir=/usr/local/roma/libexec 
+
+  # Client Installation 
+  - gem install roma-client 
+  - ls -l /usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib 
+  - cd /usr/local/src
+  - git clone https://github.com/roma/roma-ruby-client.git roma-ruby-client
+
+before_install:
+  - bundle install 
+ 
+script: ruby test/run-test.rb
