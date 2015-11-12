@@ -4,6 +4,8 @@ rvm:
 env:
   #- RUBYLIB=/usr/local/src/roma-ruby-client/lib/
   - RUBYLIB=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  - RUBYPATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
+  - PATH=$PATH:/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
 sudo: true 
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
