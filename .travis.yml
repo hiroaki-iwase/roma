@@ -2,7 +2,8 @@ language: ruby
 rvm: 
   - 2.1.2
 env:
-  - RUBYLIB=/usr/local/src/roma-ruby-client/lib/
+  #- RUBYLIB=/usr/local/src/roma-ruby-client/lib/
+  - RUBYLIB=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib
 sudo: true 
 before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
@@ -30,7 +31,8 @@ before_install:
   - gem install --local tokyocabinet-1.31.a.gem -- --with-tokyocabinet-dir=/usr/local/roma/libexec 
 
   # Client Installation 
-  #- gem install roma-client 
+  - gem install roma-client 
+  - ls -l /usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib 
   #- LD_LIBRARY_PATH=/usr/local/rvm/gems/ruby-2.1.2/gems/roma-client-0.4.3/lib 
   - cd /usr/local/src
   - git clone https://github.com/roma/roma-ruby-client.git roma-ruby-client
