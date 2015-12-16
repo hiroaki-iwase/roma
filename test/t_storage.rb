@@ -691,6 +691,7 @@ module StorageTests
 end
 
 class DbmStorageTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StorageTests
 
   def setup
@@ -718,6 +719,7 @@ class DbmStorageTest < Test::Unit::TestCase
 end
 
 class TCStorageTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StorageTests
 
   def setup
@@ -737,6 +739,7 @@ class TCStorageTest < Test::Unit::TestCase
 end
 
 class RubyHashStorageTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StorageTests
 
   def setup
@@ -801,6 +804,7 @@ class RubyHashStorageTest < Test::Unit::TestCase
 end
 
 class SQLite3StorageTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StorageTests
 
   def setup
@@ -828,6 +832,7 @@ class SQLite3StorageTest < Test::Unit::TestCase
 end
 
 class TCMemStorageTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StorageTests
 
   def setup
@@ -840,6 +845,7 @@ class TCMemStorageTest < Test::Unit::TestCase
 end
 
 class GroongaStorageTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StorageTests
 
   def storage_path

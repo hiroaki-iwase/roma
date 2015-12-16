@@ -3,6 +3,7 @@
 require 'socket'
 
 class ProtocolTest < Test::Unit::TestCase
+  self.test_order = :defined
   include RomaTestUtils
 
   def setup
@@ -21,26 +22,31 @@ class ProtocolTest < Test::Unit::TestCase
     # Set data
     @sock.write("set key 0 0 5\r\nvalue\r\n")
     assert_equal("STORED", @sock.gets.chomp)
+    sleep 0.1
 
     # Get data
     @sock.write("get key\r\n")
     assert_equal("VALUE key 0 5", @sock.gets.chomp)
     assert_equal("value", @sock.gets.chomp)
     assert_equal("END", @sock.gets.chomp)
+    sleep 0.1
 
     # Update data
     @sock.write("set key 0 0 9\r\nnew_value\r\n")
     assert_equal("STORED", @sock.gets.chomp)
+    sleep 0.1
 
     # Confirm updated data
     @sock.write("get key\r\n")
     assert_equal("VALUE key 0 9", @sock.gets.chomp)
     assert_equal("new_value", @sock.gets.chomp)
     assert_equal("END", @sock.gets.chomp)
+    sleep 0.1
 
     # Delete data
     @sock.write("delete key\r\n")
     assert_equal("DELETED", @sock.gets.chomp)
+    sleep 0.1
 
     # Confirm deleted data
     @sock.write("get key\r\n")

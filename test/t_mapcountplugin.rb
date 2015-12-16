@@ -8,6 +8,7 @@ Roma::Client::RomaClient.class_eval{
 }
 
 class MapCountPluginTest < Test::Unit::TestCase
+  self.test_order = :defined
   include RomaTestUtils
 
   DATE_FORMAT = "%Y-%m-%dT%H:%M:%S +00"

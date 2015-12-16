@@ -5,6 +5,7 @@ require 'roma/config'
 require 'pathname'
 
 class CpdbBaseTest < Test::Unit::TestCase
+  self.test_order = :defined
   include RomaTestUtils
 
   def teardown

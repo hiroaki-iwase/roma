@@ -32,6 +32,7 @@ end # end of StreamWriterTests module
 
 
 class StreamWriterTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StreamWriterTests
   include RomaTestUtils
 
@@ -61,6 +62,7 @@ class StreamWriterTest < Test::Unit::TestCase
 end #  end of StreamWriterTest class
 
 class ClusterReplicationTest < Test::Unit::TestCase
+  self.test_order = :defined
   include StreamWriterTests
   include RomaTestUtils
 
